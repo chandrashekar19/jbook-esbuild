@@ -1,5 +1,7 @@
-import { useState, useEffect, useRef } from "react";
 import * as esbuild from "esbuild-wasm";
+import { useState, useEffect, useRef } from "react";
+import { unpkgPathPlugin } from "./plugins/unpkg-path-plugin";
+import { fetchPlugin } from "./plugins/fetch-plugin";
 
 const App = () => {
   const ref = useRef<any>();
@@ -9,29 +11,34 @@ const App = () => {
   const startService = async () => {
     ref.current = await esbuild.startService({
       worker: true,
-      wasmURL: "/esbuild.wasm",
+      wasmURL: "https://unpkg.com/esbuild-wasm@0.8.27/esbuild.wasm",
     });
-    // console.log("SERVICE", service);
   };
-
   useEffect(() => {
     startService();
   }, []);
 
-  const handleClick = async () => {
+  const onClick = async () => {
     if (!ref.current) {
       return;
     }
-    const result = await ref.current.transform(input, {
-      loader: "jsx",
-      target: "es2015",
-    }); // it will only do the transpiling not the bundling .
 
-    setCode(result.code);
-    // console.log("Res", result);
+    const result = await ref.current.build({
+      entryPoints: ["index.js"],
+      bundle: true,
+      write: false,
+      plugins: [unpkgPathPlugin(), fetchPlugin(input)],
+      define: {
+        "process.env.NODE_ENV": '"production"',
+        global: "window",
+      },
+    });
+
+    // console.log(result);
+
+    setCode(result.outputFiles[0].text);
   };
 
-  // to make sure we only try to  call startService  one single time when our component is first rendered to the screen.
   return (
     <div>
       <textarea
@@ -39,7 +46,7 @@ const App = () => {
         onChange={(e) => setInput(e.target.value)}
       ></textarea>
       <div>
-        <button onClick={handleClick}>Submit</button>
+        <button onClick={onClick}>Submit</button>
       </div>
       <pre>{code}</pre>
     </div>
