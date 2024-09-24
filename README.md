@@ -1,53 +1,87 @@
-### 🚀 Just built a simple React app that integrates esbuild-wasm to transpile JSX to ES2015 in the browser!
 
-### 🛠️ It's a quick demo of how to use esbuild for fast and efficient code transformations on the client side.
+# 🚀 React App with `esbuild-wasm` Integration for Client-Side JSX to ES2015 Transpilation
 
-### using the command npm view react dist.tarball you can see the react package file which consists of bundles .
+This project demonstrates how to integrate `esbuild-wasm` to efficiently transpile JSX into ES2015 directly in the browser. It's a simple yet powerful demo of how to leverage `esbuild` for fast code transformations on the client side.
 
-### unpkg is a fast, global content delivery network for everything on npm. Use it to quickly and easily load any file from any package using a URL like
+## Key Features
 
-### only by implementing the onResolve and onLoad we can able to test esbuild .
+- **Client-side JSX Transpilation**: Utilizing `esbuild-wasm`, JSX is converted to ES2015 code directly in the browser.
+- **Fast and Efficient Code Transformations**: With `esbuild`, transformations are quick and optimized for performance.
+- **On-the-fly CSS Loading**: CSS files like Bulma can be imported dynamically.
 
-### Implementing the caching layer .
+## Installation & Setup
 
-### localforage uses localstorage in the browsers with no INDEXDB or WEBSQL Support
+To install and view the React package file, you can run the following command:
 
-### we can try to load the css files on the ui which we have created .
+```bash
+npm view react dist.tarball
+```
 
-### Example: import 'bulma/css/bulma.css';
+To quickly load any file from npm packages, you can also use [unpkg](https://unpkg.com). It’s a fast, global content delivery network (CDN) for everything on npm. Example:
 
-### underhood how the css file get loaded
+```html
+<link rel="stylesheet" href="https://unpkg.com/bulma/css/bulma.css">
+```
 
-## considerations around the code execution
+## esbuild Integration
 
-### user provided code might throw errors and cause our program to crash .
+### `onResolve` and `onLoad` Methods
 
-### user-provided code might mutate the DOM, causing our program to crash .
+The core of testing `esbuild` relies on implementing the following methods:
 
-### A user might accidentally run the code provided by another malicious user .
+- **`onResolve`**: Resolves the paths of the modules.
+- **`onLoad`**: Loads the content of the resolved files.
 
-### cookies are used for the authentication in many different places .
+These methods enable us to load and transform the code dynamically in the browser.
 
-## Iframes need to be explored
+### Caching with `localforage`
 
-### Direct access between frames is allowed when
+We implemented a caching layer using `localforage`, which allows us to store resources in the browser’s `localStorage`. For browsers that don't support `IndexedDB` or `WebSQL`, `localforage` seamlessly falls back to `localStorage`.
 
-### the iframe elemnent does not have a sandbox property or has a sandbox=allow same-origin" property
+## CSS Loading Example
 
-## AND
+You can load CSS files dynamically in the browser as shown below:
 
-### we fetch the parent HTML doc and the frame HTML doc from the exact same .
+```javascript
+import 'bulma/css/bulma.css';
+```
 
-### Domain
+The `esbuild` package can handle these CSS imports, and the styles are applied directly to the UI.
 
-### Port
+## Code Execution Considerations
 
-### Protocol
+When working with user-provided code, there are several risks to be aware of:
 
-### to disallow the cross-frame access the iframe content should be loaded from different domain or port
+1. **Errors and Crashes**: User-provided code might throw errors, causing the app to crash.
+2. **DOM Manipulation**: Malicious or erroneous code may mutate the DOM, leading to unpredictable behavior or crashes.
+3. **Security**: User-provided code could be malicious. Always validate and sanitize user input to prevent security risks like cross-site scripting (XSS).
 
-### direct access between the frames is allowed when the iframe element does not have a sandbox property or has a sandbox="allow-same-origin" property .
+Cookies are often used for authentication in various parts of web applications, so ensure proper security measures are taken when handling cookies.
 
-### and we fetch the parent HTML doc and frame HTML doc from the exact same .
+## Exploring `iframe` Security
 
-### 1.Domain 2.Port 3.protocol
+Iframes allow embedding of other documents into the parent page, but there are important security considerations to prevent cross-frame access:
+
+### Allowing Cross-Frame Access
+
+Direct access between frames is allowed when:
+
+1. The iframe element **does not have** a `sandbox` property or has a `sandbox="allow-same-origin"` property.
+2. The parent HTML document and the iframe HTML document are fetched from the **exact same**:
+   - Domain
+   - Port
+   - Protocol
+
+### Disallowing Cross-Frame Access
+
+To block cross-frame access, the iframe content should be loaded from a **different** domain, port, or protocol. This can be done by setting the `sandbox` attribute properly on the iframe element.
+
+Example:
+
+```html
+<iframe src="https://example.com" sandbox="allow-scripts"></iframe>
+```
+
+---
+
+This README provides an overview of the functionality, security considerations, and esbuild integration details. Feel free to explore further and enhance the project with more features!
