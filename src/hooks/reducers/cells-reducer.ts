@@ -3,7 +3,6 @@ import { ActionType } from "../action-types";
 import { Action } from "../actions";
 import { Cell, CellsState } from "../../types";
 
-// Initial state of the cells
 const initialState: CellsState = {
   loading: false,
   error: null,
@@ -56,7 +55,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
     }
 
     // Handles inserting a new cell before an existing one
-    case ActionType.INSERT_CELL_BEFORE: {
+    case ActionType.INSERT_CELL_AFTER: {
       // Create a new cell object with a random ID
       const cell: Cell = {
         content: "",
@@ -72,12 +71,12 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
         (id) => id === action.payload.id
       );
 
-      // If the specified cell ID was not found, append the new cell at the end
+      // If the specified cell ID was not found, append the new cell at the start of an array using unshift
       if (foundIndex < 0) {
-        state.order.push(cell.id);
+        state.order.unshift(cell.id);
       } else {
         // Insert the new cell before the found index
-        state.order.splice(foundIndex, 0, cell.id);
+        state.order.splice(foundIndex + 1, 0, cell.id);
       }
 
       return state;
@@ -87,7 +86,7 @@ const reducer = produce((state: CellsState = initialState, action: Action) => {
     default:
       return state;
   }
-});
+}, initialState);
 
 // Helper function to generate a random 5-character string as an ID
 const randomId = () => {

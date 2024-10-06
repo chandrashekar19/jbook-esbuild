@@ -313,3 +313,77 @@ body .preview-wrapper:after {
 .text-editor .token.list.punctuation {
   background-color: unset;
 }
+
+/* -------------- actionbar.css -----------------  */
+
+.action-bar {
+  position: absolute;
+  top: 0;
+  right: 0;
+  opacity: 0.5;
+}
+
+.action-bar:hover {
+  opacity: 1;
+}
+
+.action-bar-wrapper {
+  height: 30px;
+  width: 100%;
+  background-color: #37414b;
+}
+
+/*  --- celllistItem ---------- */
+
+.cell-list-item {
+  position: relative;
+}
+
+/* ------ add cell styles ------------ */
+
+.add-cell {
+  position: relative;
+  opacity: 0;
+  transition: opacity 0.3s ease-in;
+  margin: 10px 0;
+}
+
+.add-cell:hover {
+  opacity: 1;
+}
+
+.add-cell.force-visible {
+  opacity: 1;
+}
+
+.add-cell .divider {
+  position: absolute;
+  top: 50%;
+  bottom: 50%;
+  right: 2.5%;
+  left: 2.5%;
+  border-bottom: 1px solid gray;
+  width: 90%;
+  z-index: -1;
+}
+
+.add-cell .add-buttons {
+  display: flex;
+  justify-content: center;
+}
+
+.add-cell .add-buttons button {
+  margin: 0 20px;
+}
+
+/* ---------- progress-cover ----------- */
+
+.progress-cover {
+  height: 100%;
+  flex-grow: 1;
+  background-color: white;
+  display: flex;
+  align-items: center;
+  padding-left: 10%;
+  padding-right: 10%;
+}
